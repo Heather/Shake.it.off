@@ -27,9 +27,9 @@ import System.Posix.Files
 import Control.Monad
 
 getMTime :: FilePath → IO UTCTime
-getMTime =
+getMTime f =
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
-  getModificationTime
+  getModificationTime f
 #else
   liftM modificationTime (getFileStatus f)
 #endif
