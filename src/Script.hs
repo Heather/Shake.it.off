@@ -22,16 +22,17 @@ import Data.List
 #if ! ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 import System.Posix.Process
 import System.Posix.Files
+import System.Posix.Types
 #endif
 
 import Control.Monad
 
-getMTime :: FilePath → IO UTCTime
-getMTime f =
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
-  getModificationTime f
+getMTime :: FilePath → IO UTCTime
+getMTime f = getModificationTime f
 #else
-  liftM modificationTime (getFileStatus f)
+getMTime :: FilePath → IO EpochTime
+getMTime f = liftM modificationTime (getFileStatus f)
 #endif
 
 runShake :: String → [String] → IO ()
