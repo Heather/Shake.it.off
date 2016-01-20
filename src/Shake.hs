@@ -8,7 +8,7 @@
 
 module Shake
   ( shakeIt
-  , shake
+  , shakeItOff
   ) where
 
 import Script
@@ -28,13 +28,18 @@ import Control.Concurrent
 
 shakeIt :: String → IO ()
 shakeIt current = do
-  let fullname = current </> "shake.it.hs"
-  exists ← doesFileExist fullname
-  if exists then shake current fullname
-            else putStrLn "no shake.it.hs file"
+  let fullnamelhs = current </> "shake.it.lhs"
+  let fullnamehs  = current </> "shake.it.hs"
+  existslhs ← doesFileExist fullnamelhs
+  if existslhs
+    then shakeItOff current fullnamelhs
+    else do
+      existshs ← doesFileExist fullnamehs
+      if existshs then shakeItOff current fullnamehs
+                  else putStrLn "no shake.it.hs / shake.it.lhs file"
 
-shake :: String → String → IO ()
-shake dir shakefile = do
+shakeItOff :: String → String → IO ()
+shakeItOff dir shakefile = do
   let cscr = if | os ∈ ["win32", "mingw32", "cygwin32"] → "shake.it.off.exe"
                 | otherwise → "shake.it.off"
 
@@ -52,4 +57,4 @@ shake dir shakefile = do
                                exitFailure
                              ExitSuccess → return ()
 
-  shakeItOff cscr
+  runShake cscr

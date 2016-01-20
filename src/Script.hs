@@ -8,7 +8,7 @@
 
 module Script
   ( getMTime
-  , shakeItOff
+  , runShake
   ) where
 
 import System.Directory (getModificationTime)
@@ -33,8 +33,8 @@ getMTime =
   liftM modificationTime (getFileStatus f)
 #endif
 
-shakeItOff :: String → IO ()
-shakeItOff cscr =
+runShake :: String → IO ()
+runShake cscr =
 #if defined(mingw32_HOST_OS) || defined(__MINGW32__)
   do pid ← runCommand cscr
      waitForProcess pid >>= exitWith

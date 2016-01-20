@@ -1,9 +1,15 @@
-name: shake
-version: 0.0.1
-license: BSD3
+name:           ShakeItOff
+version:        0.0.1
+license:        BSD3
+category:       Development
 
-build-type: Simple
-cabal-version: >= 1.6
+build-type:     Simple
+cabal-version:  >= 1.6
+
+library
+  Hs-Source-Dirs: src
+  exposed-modules:
+      Shake.It.Off
 
 Executable    shake
   Main-Is:    Main.hs
