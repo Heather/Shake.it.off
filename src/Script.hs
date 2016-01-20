@@ -17,6 +17,7 @@ import System.Exit
 import System.IO
 
 import Data.Time.Clock
+import Data.List
 
 #if ! ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 import System.Posix.Process
@@ -33,10 +34,10 @@ getMTime =
   liftM modificationTime (getFileStatus f)
 #endif
 
-runShake :: String → IO ()
-runShake cscr =
+runShake :: String → [String] → IO ()
+runShake cscr args =
 #if defined(mingw32_HOST_OS) || defined(__MINGW32__)
-  do pid ← runCommand cscr
+  do pid ← runCommand (cscr ++ " " ++ intercalate " " args)
      waitForProcess pid >>= exitWith
 #else
   executeFile cscr False args Nothing

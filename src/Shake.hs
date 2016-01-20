@@ -56,5 +56,5 @@ shakeItOff dir shakefile = do
                                hPrint stderr i
                                exitFailure
                              ExitSuccess → return ()
-
-  runShake cscr
+  args <- getArgs
+  runShake cscr args

@@ -1,3 +1,3 @@
 @echo off
-cabal install
+cabal install --force-reinstall
 pause

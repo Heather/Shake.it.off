@@ -10,6 +10,13 @@ library
   Hs-Source-Dirs: src
   exposed-modules:
       Shake.It.Off
+  Build-Depends:
+      base
+    , process
+    , directory
+    , filepath
+    , time
+    , eternal
 
 Executable    shake
   Main-Is:    Main.hs
