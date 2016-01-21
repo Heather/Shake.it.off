@@ -15,7 +15,6 @@ before_install:
 install: cabal update
 script:
  - cabal --version
- - cabal install --only-dependencies
- - cabal configure
- - cabal build
+ - cabal install
+ - shake clean
  
