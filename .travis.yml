@@ -16,5 +16,3 @@ install: cabal update
 script:
  - cabal --version
  - cabal install
- - shake clean
- 
