@@ -26,5 +26,5 @@ shake action = action
 
 pony :: String → IO () → IO ()
 pony arg action = do
-  args <- getArgs
+  args ← getArgs
   when (arg ∈ args) action
