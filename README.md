@@ -18,8 +18,6 @@ Example
 `shake.it.hs` file (or `shake.it.lhs`)
 
 ``` haskell
-{-# LANGUAGE UnicodeSyntax #-}
-
 import Shake.It.Off
 
 main :: IO ()
