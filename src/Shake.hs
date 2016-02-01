@@ -29,7 +29,7 @@ import Control.Concurrent
 shakeIt :: String → IO ()
 shakeIt current = do
   let fullnamelhs = current </> "shake.it.lhs"
-  let fullnamehs  = current </> "shake.it.hs"
+      fullnamehs  = current </> "shake.it.hs"
   existslhs ← doesFileExist fullnamelhs
   if existslhs
     then shakeItOff current fullnamelhs
@@ -56,5 +56,5 @@ shakeItOff dir shakefile = do
                                hPrint stderr i
                                exitFailure
                              ExitSuccess → return ()
-  args <- getArgs
-  runShake cscr args
+
+  getArgs >>= runShake cscr

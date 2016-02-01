@@ -10,7 +10,7 @@ import Shake.It.Off
 checkExitCode :: ExitCode -> IO ()
 checkExitCode ExitSuccess = return ()
 checkExitCode (ExitFailure code) =
-    error $ "failed with exit code: " ++ (show code)
+    error $ "failed with exit code: " ++ show code
 
 cabal :: [String] -> IO ()
 cabal a = rawSystem "cabal" a >>= checkExitCode

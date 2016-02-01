@@ -24,10 +24,10 @@ main ∷ IO ()
 main = do
   current ← getCurrentDirectory
   let lock = current ++ "shake.it.lock"
-  locked ← doesFileExist lock
-  let gogo = shakeIt current
+      gogo = shakeIt current
       start = myThreadId ≫= \t → withFile lock WriteMode (const gogo)
                                      `finally` removeFile lock
+  locked ← doesFileExist lock
   if locked then do putStrLn "There is already one instance of shake running."
                     putStrLn "Remove lock and start again? (Y/N)"
                     hFlush stdout
