@@ -12,6 +12,27 @@ Features
  - Contains many (and adding) handy functions for creating build scripts everywhere!
  - You can think of pony when you use phony... (it's in early stage)
 
+Example
+-------
+
+`shake.it.hs` file (or `shake.it.lhs`)
+
+``` haskell
+{-# LANGUAGE UnicodeSyntax #-}
+
+import Shake.It.Off
+
+main :: IO ()
+main = shake $ do
+  phony "clean" $ cabal ["clean"]
+
+  cabal ["install", "--only-dependencies"]
+  cabal ["configure"]
+  cabal ["build"]
+```
+
+every time you run `shake` on this file if `shake.it.off` is outdated or not exists it will be rebuild (otherwise you will just run shake.it.off); when you will run `shake clean` it will process just `cabal clean`, if you will run it with no arguments then it will rebuild project, if you will run it with `shake clean install` it will process `shake clean` first then in case if there will be `shake install` phony it will process it, else way it will process default case (rebuilding) after cleaning. (because it's simple stupid imperative)
+
 User story
 ----------
 
