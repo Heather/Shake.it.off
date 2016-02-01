@@ -20,11 +20,14 @@ import Control.Exception
 import Control.Eternal
 import Control.Concurrent
 
+import Shake.It.Off
+
 main ∷ IO ()
 main = do
-  current ← getCurrentDirectory
+  shakeArgs ← getArgs
+  current   ← getCurrentDirectory
   let lock = current ++ "shake.it.lock"
-      gogo = shakeIt current
+      gogo = shakeIt shakeArgs current
       start = myThreadId ≫= \t → withFile lock WriteMode (const gogo)
                                      `finally` removeFile lock
   locked ← doesFileExist lock

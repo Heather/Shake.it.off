@@ -4,7 +4,7 @@ license:        BSD3
 category:       Development
 
 build-type:     Simple
-cabal-version:  >= 1.6
+cabal-version:  >= 1.8
 
 library
   Hs-Source-Dirs: src
@@ -12,8 +12,10 @@ library
       Shake.It.Off
   Other-Modules:
       Shake.It.Core
+      Shake.It.Version
       Shake.It.Haskell.Cabal
       Shake.It.Haskell
+      Paths_ShakeItOff
   Build-Depends:
       base
     , process
@@ -36,7 +38,8 @@ Executable    shake
     , filepath
     , time
     , eternal
+    , ShakeItOff
 
   if !os(windows)
     Build-Depends:
-      unix >= 2.5
+      unix

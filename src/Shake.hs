@@ -14,7 +14,6 @@ module Shake
 import Script
 
 import System.Info (os)
-import System.Environment( getArgs )
 import System.Exit
 import System.Directory
 import System.IO
@@ -26,20 +25,21 @@ import Control.Exception
 import Control.Eternal
 import Control.Concurrent
 
-shakeIt :: String → IO ()
-shakeIt current = do
-  let fullnamelhs = current </> "shake.it.lhs"
-      fullnamehs  = current </> "shake.it.hs"
-  existslhs ← doesFileExist fullnamelhs
+shakeIt :: [String] → String → IO ()
+shakeIt args current = do
+  let fullNamelhs = current </> "shake.it.lhs"
+      fullNamehs  = current </> "shake.it.hs"
+      shakeShake  = shakeItOff args current
+  existslhs ← doesFileExist fullNamelhs
   if existslhs
-    then shakeItOff current fullnamelhs
+    then shakeShake fullNamelhs
     else do
-      existshs ← doesFileExist fullnamehs
-      if existshs then shakeItOff current fullnamehs
+      existshs ← doesFileExist fullNamehs
+      if existshs then shakeShake fullNamehs
                   else putStrLn "no shake.it.hs / shake.it.lhs file"
 
-shakeItOff :: String → String → IO ()
-shakeItOff dir shakefile = do
+shakeItOff :: [String] → String → String → IO ()
+shakeItOff args dir shakefile = do
   let cscr = if | os ∈ ["win32", "mingw32", "cygwin32"] → "shake.it.off.exe"
                 | otherwise → "shake.it.off"
 
@@ -57,4 +57,4 @@ shakeItOff dir shakefile = do
                                exitFailure
                              ExitSuccess → return ()
 
-  getArgs >>= runShake cscr
+  runShake cscr args

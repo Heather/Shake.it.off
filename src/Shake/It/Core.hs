@@ -2,9 +2,9 @@
     UnicodeSyntax
   #-}
 
-  module Shake.It.Core
-    ( checkExitCode
-    ) where
+module Shake.It.Core
+  ( checkExitCode
+  ) where
 
 import System.Exit
 
