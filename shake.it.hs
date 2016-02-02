@@ -6,7 +6,7 @@ import Shake.It.Off
 
 main :: IO ()
 main = shake $ do
-  phony "clean" $ cabal ["clean"]
+  "clean" ∰ cabal ["clean"]
 
   cabal ["install", "--only-dependencies"]
   cabal ["configure"]

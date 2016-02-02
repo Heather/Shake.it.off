@@ -12,6 +12,19 @@ Features
  - Contains many (and adding) handy functions for creating build scripts everywhere!
  - You can think of pony when you use phony... (it's in early stage)
 
+Operators
+---------
+
+``` haskell
+-- Phony operator
+(#>) :: String → IO () → IO ()
+r #> a = phony r a
+
+-- Unicode variant of phony
+(∰) :: String → IO () → IO ()
+r ∰ a = phony r a
+```
+
 Example
 -------
 

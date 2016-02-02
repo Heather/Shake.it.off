@@ -9,6 +9,7 @@
 module Shake.It.Off
   ( shake
   , phony
+  , (#>), (∰)
   , module Shake
   ) where
 
@@ -48,3 +49,13 @@ phony arg phonyAction = do
     phonyAction
     filtered ← removePhonyArg args arg
     when (null filtered) exitSuccess
+
+infixl 2 ∰, #>
+
+-- Phony operator
+(#>) :: String → IO () → IO ()
+r #> a = phony r a
+
+-- Unicode variant of phony
+(∰) :: String → IO () → IO ()
+r ∰ a = phony r a
