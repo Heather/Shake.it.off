@@ -16,6 +16,8 @@ Operators
 ---------
 
 ``` haskell
+infixl 2 ∰, ∫, #>, @>
+
 -- Phony operator
 (#>) :: String → IO () → IO ()
 r #> a = phony r a
@@ -23,6 +25,14 @@ r #> a = phony r a
 -- Unicode variant of phony
 (∰) :: String → IO () → IO ()
 r ∰ a = phony r a
+
+-- Obj operator
+(@>) :: String → IO () → IO ()
+r @> a = obj r a
+
+-- Unicode Obj operator
+(∫) :: String → IO () → IO ()
+r ∫ a = obj r a
 ```
 
 Example
@@ -37,9 +47,10 @@ main :: IO ()
 main = shake $ do
   phony "clean" $ cabal ["clean"]
 
-  cabal ["install", "--only-dependencies"]
-  cabal ["configure"]
-  cabal ["build"]
+  obj "dist/build/Cr.exe" $ do
+    cabal ["install", "--only-dependencies"]
+    cabal ["configure"]
+    cabal ["build"]
 ```
 
 every time you run `shake` on this file if `shake.it.off` is outdated or not exists it will be rebuild (otherwise you will just run shake.it.off); when you will run `shake clean` it will process just `cabal clean`, if you will run it with no arguments then it will rebuild project, if you will run it with `shake clean install` it will process `shake clean` first then in case if there will be `shake install` phony it will process it, else way it will process default case (rebuilding) after cleaning. (because it's simple stupid imperative)
@@ -59,9 +70,3 @@ Error, rule "dist/build/Cr.exe" failed to build file:
 ```
 
 I was trying to understand realization and I've got some bits. It's impossible to have analitics without wrapping IO into Rules and Action and maybe custom functions for those wrappers. I was trying to get deeper and repeat something alike with `free` alike in this example https://github.com/ekmett/free/blob/master/examples/RetryTH.hs - and it's really not that simple to understand what's actually happening there. And there `withRetry` block is sure not IO () block, just yet another wrapper. Yes, wrapped Rules and Actions are easy to process but I don't want to learn that stuff so far, I don't want to lift from IO to Action and bind it to Rule everytime I want to make small change. This library/util is tiny but practical, it's doing very simple things and using imerative way including global mutable state to resolve things alike `phony` in dirty (but simple) way.
-
-TODO
-----
-
- - Rules based on file paths
- - Dependent rules
