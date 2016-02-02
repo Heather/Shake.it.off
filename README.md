@@ -50,7 +50,5 @@ I was trying to understand realization and I've got some bits. It's impossible t
 TODO
 ----
 
- - Options for shake util: force script rebuild
- - Options for shake util: help and version
  - Rules based on file paths
  - Dependent rules
