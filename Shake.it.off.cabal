@@ -1,5 +1,5 @@
 name:           ShakeItOff
-version:        0.0.1
+version:        0.0.2
 license:        BSD3
 category:       Development
 
@@ -38,6 +38,7 @@ Executable    shake
     , filepath
     , time
     , eternal
+    , MissingH
     , ShakeItOff
 
   if !os(windows)

@@ -1,4 +1,4 @@
 @echo off
 cabal install --force-reinstall
-shake
+shake -f
 pause
