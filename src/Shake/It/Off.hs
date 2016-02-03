@@ -14,7 +14,10 @@
 module Shake.It.Off
   ( shake
   , phony, obj
-  , (#>), (@>), (♯), (∰), (◉), (∫), (♯♯)
+  , (◉)
+  , (#>), (@>), (##>), (@@>)
+  , (♯), (♯♯)
+  , (∫), (∰)
   , module Shake
   ) where
 
@@ -101,27 +104,35 @@ obj' (arg, deps) complexBuildAction = do
   writeIORef objects new
 
 -- operators
-infixl 2 ∰, ◉, ∫, #>, @>, ♯, ♯♯
-
--- Phony operator
-(#>) :: String → IO () → IO ()
-r #> a = phony r a
-
--- Unicode variant of phony
-(∫) :: String → IO () → IO ()
-r ∫ a = phony r a
+infixl 2 ∰, ◉, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
 -- tuple maker
 (◉) :: String → [String] → (String, [String])
 s ◉ ss = (s, ss)
+
+-- Phony operator
+(@>) :: String → IO () → IO ()
+r @> a = phony r a
+
+-- Phony' operator
+(@@>) :: (String, [String]) → IO () → IO ()
+r @@> a = phony' r a
+
+-- Unicode variant of phony
+(∫) :: String → IO () → IO ()
+r ∫ a = phony r a
 
 -- Unicode variant of phony'
 (∰) :: (String, [String]) → IO () → IO ()
 r ∰ a = phony' r a
 
 -- Obj operator
-(@>) :: String → IO () → IO ()
-r @> a = obj r a
+(#>) :: String → IO () → IO ()
+r #> a = obj r a
+
+-- Obj' operator
+(##>) :: (String, [String]) → IO () → IO ()
+r ##> a = obj' r a
 
 -- Unicode Obj operator
 (♯) :: String → IO () → IO ()

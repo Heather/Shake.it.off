@@ -17,27 +17,35 @@ Operators
 
 ``` haskell
 -- operators
-infixl 2 ∰, ◉, ∫, #>, @>, ♯, ♯♯
-
--- Phony operator
-(#>) :: String → IO () → IO ()
-r #> a = phony r a
-
--- Unicode variant of phony
-(∫) :: String → IO () → IO ()
-r ∫ a = phony r a
+infixl 2 ∰, ◉, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
 -- tuple maker
 (◉) :: String → [String] → (String, [String])
 s ◉ ss = (s, ss)
+
+-- Phony operator
+(@>) :: String → IO () → IO ()
+r @> a = phony r a
+
+-- Phony' operator
+(@@>) :: (String, [String]) → IO () → IO ()
+r @@> a = phony' r a
+
+-- Unicode variant of phony
+(∫) :: String → IO () → IO ()
+r ∫ a = phony r a
 
 -- Unicode variant of phony'
 (∰) :: (String, [String]) → IO () → IO ()
 r ∰ a = phony' r a
 
 -- Obj operator
-(@>) :: String → IO () → IO ()
-r @> a = obj r a
+(#>) :: String → IO () → IO ()
+r #> a = obj r a
+
+-- Obj' operator
+(##>) :: (String, [String]) → IO () → IO ()
+r ##> a = obj' r a
 
 -- Unicode Obj operator
 (♯) :: String → IO () → IO ()
@@ -54,16 +62,25 @@ Example
 `shake.it.hs` file (or `shake.it.lhs`)
 
 ``` haskell
+{-# LANGUAGE UnicodeSyntax #-}
+
 import Shake.It.Off
 
 main :: IO ()
 main = shake $ do
-  phony "clean" $ cabal ["clean"]
+  -- phony clean @> is non-unicode operator alternative
+  "clean" ∫ cabal ["clean"]
 
-  obj "dist/build/Cr.exe" $ do
+  -- building object rule #> is non-unicode operator alternative
+  "dist/build/Shake/shake.exe" ♯ do
     cabal ["install", "--only-dependencies"]
     cabal ["configure"]
     cabal ["build"]
+
+  -- install phony depending on obj, @@> is non-unicode operator alternative
+  -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
+  "install" ◉ ["dist/build/Shake/shake.exe"] ∰
+    cabal ["install"]
 ```
 
 every time you run `shake` on this file if `shake.it.off` is outdated or not exists it will be rebuild (otherwise you will just run shake.it.off); when you will run `shake clean` it will process just `cabal clean`, if you will run it with no arguments then it will rebuild project, if you will run it with `shake clean install` it will process `shake clean` first then in case if there will be `shake install` phony it will process it, else way it will process default case (rebuilding) after cleaning. (because it's simple stupid imperative)
