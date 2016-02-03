@@ -62,6 +62,23 @@ Example
 `shake.it.hs` file (or `shake.it.lhs`)
 
 ``` haskell
+import Shake.It.Off
+
+main :: IO ()
+main = shake $ do
+  phony "clean" $ cabal ["clean"]
+
+  obj "dist/build/Cr.exe" $ do
+    cabal ["install", "--only-dependencies"]
+    cabal ["configure"]
+    cabal ["build"]
+```
+
+every time you run `shake` on this file if `shake.it.off` is outdated or not exists it will be rebuild (otherwise you will just run shake.it.off); when you will run `shake clean` it will process just `cabal clean`, if you will run it with no arguments then it will rebuild project, if you will run it with `shake clean install` it will process `shake clean` first then in case if there will be `shake install` phony it will process it, else way it will process default case (rebuilding) after cleaning. (because it's simple stupid imperative)
+
+more complex example with Unicode operators:
+
+``` haskell
 {-# LANGUAGE UnicodeSyntax #-}
 
 import Shake.It.Off
@@ -79,28 +96,6 @@ main = shake $ do
 
   -- install phony depending on obj, @@> is non-unicode operator alternative
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
-  "install" ◉ ["dist/build/Shake/shake.exe"] ∰
-    cabal ["install"]
-```
-
-every time you run `shake` on this file if `shake.it.off` is outdated or not exists it will be rebuild (otherwise you will just run shake.it.off); when you will run `shake clean` it will process just `cabal clean`, if you will run it with no arguments then it will rebuild project, if you will run it with `shake clean install` it will process `shake clean` first then in case if there will be `shake install` phony it will process it, else way it will process default case (rebuilding) after cleaning. (because it's simple stupid imperative)
-
-more complex example with Unicode operators:
-
-``` haskell
-{-# LANGUAGE UnicodeSyntax #-}
-
-import Shake.It.Off
-
-main :: IO ()
-main = shake $ do
-  "clean" ∫ cabal ["clean"]
-
-  "dist/build/Shake/shake.exe" ♯ do
-    cabal ["install", "--only-dependencies"]
-    cabal ["configure"]
-    cabal ["build"]
-
   "install" ◉ ["dist/build/Shake/shake.exe"] ∰
     cabal ["install"]
 ```
