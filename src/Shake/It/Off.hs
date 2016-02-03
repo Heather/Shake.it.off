@@ -14,15 +14,13 @@
 module Shake.It.Off
   ( shake
   , phony, obj
-  , (#>), (@>), (∰), (∫)
+  , (#>), (@>), (♯), (∰), (◉), (∫), (♯♯)
   , module Shake
-  -- , module Data.Optional
   ) where
 
 import System.Process
 import System.Environment
 import System.Exit
-import System.IO.Unsafe
 import System.Directory
 import System.FilePath ((</>))
 
@@ -35,60 +33,100 @@ import Shake.It.Core as Shake
 import Shake.It.Version as Shake
 import Shake.It.Haskell as Shake
 
-phonyArgs :: IORef [String]
-{-# NOINLINE phonyArgs #-}
-phonyArgs = unsafePerformIO (newIORef [])
-
-objects :: IORef [(String, IO ())]
-{-# NOINLINE objects #-}
-objects = unsafePerformIO (newIORef [])
-
 shake :: IO () → IO ()
 shake maybeAction = do
   getArgs >>= writeIORef phonyArgs
   maybeAction
-  currentDir ← getCurrentDirectory
-  myObjects  ← readIORef objects
-  forM_ myObjects $ \(file, buildAction) → do
-    let fullPath = currentDir </> file
-    buildAction -- building this file
-    objExists ← doesFileExist fullPath
-    unless objExists exitFailure
-
-removePhonyArg :: [String] → String → IO [String]
-removePhonyArg args arg = do
-  let filtered = filter (/= arg) args
-  writeIORef phonyArgs filtered
-  return filtered
+  myObjects ← readIORef objects
+  forM_ myObjects $ uncurry compileObj
 
 phony :: String → IO () → IO ()
 phony arg phonyAction = do
   args ← readIORef phonyArgs
-  when (arg ∈ args) $ do
-    phonyAction
-    filtered ← removePhonyArg args arg
-    when (null filtered) exitSuccess
+  if arg ∈ args
+    then do phonyAction
+            filtered ← removePhonyArg args arg
+            when (null filtered) exitSuccess
+    else do currentPhony ← readIORef phonyActions
+            let new = (arg, phonyAction) : currentPhony
+            writeIORef phonyActions new
+
+phony' :: (String, [String]) → IO () → IO ()
+phony' (arg, deps) complexPhonyAction = do
+  myPhonyArgs ← readIORef phonyArgs
+  myPhonyActions ← readIORef phonyActions
+  if arg ∈ myPhonyArgs
+    then do
+      myObjects ← readIORef objects
+      forM_ deps $ \dep → do
+        forM_ myObjects $ \(file, buildAction) →
+          when (dep == file) $
+            compileObj file buildAction
+        forM_ myPhonyActions $ \(rule, phonyAction) →
+          when (dep == rule) $ do
+            phonyAction
+            removePhonyArg myPhonyArgs rule
+            return ()
+      complexPhonyAction
+      filtered ← removePhonyArg myPhonyArgs arg
+      when (null filtered) exitSuccess
+    else let new = (arg, complexPhonyAction) : myPhonyActions
+         in writeIORef phonyActions new
 
 obj :: FilePath → IO () → IO ()
 obj arg buildAction = do
   currentObjects ← readIORef objects
+  currentObjectList ← readIORef objectsList
   let new = (arg, buildAction) : currentObjects
+  writeIORef objectsList (arg : currentObjectList)
   writeIORef objects new
 
-infixl 2 ∰, ∫, #>, @>
+obj' :: (String, [String]) → IO () → IO ()
+obj' (arg, deps) complexBuildAction = do
+  myPhonyArgs    ← readIORef phonyArgs
+  myPhonyActions ← readIORef phonyActions
+  myObjects      ← readIORef objects
+  myObjectList   ← readIORef objectsList
+  forM_ deps $ \dep → do
+    forM_ myObjects $ \(file, buildAction) →
+      when (dep == file) $
+        compileObj file buildAction
+    forM_ myPhonyActions $ \(rule, phonyAction) →
+      when (dep == rule) $ do
+        phonyAction
+        removePhonyArg myPhonyArgs rule
+        return ()
+  let new = (arg, complexBuildAction) : myObjects
+  writeIORef objectsList (arg : myObjectList)
+  writeIORef objects new
+
+-- operators
+infixl 2 ∰, ◉, ∫, #>, @>, ♯, ♯♯
 
 -- Phony operator
 (#>) :: String → IO () → IO ()
 r #> a = phony r a
 
 -- Unicode variant of phony
-(∰) :: String → IO () → IO ()
-r ∰ a = phony r a
+(∫) :: String → IO () → IO ()
+r ∫ a = phony r a
+
+-- tuple maker
+(◉) :: String → [String] → (String, [String])
+s ◉ ss = (s, ss)
+
+-- Unicode variant of phony'
+(∰) :: (String, [String]) → IO () → IO ()
+r ∰ a = phony' r a
 
 -- Obj operator
 (@>) :: String → IO () → IO ()
 r @> a = obj r a
 
 -- Unicode Obj operator
-(∫) :: String → IO () → IO ()
-r ∫ a = obj r a
+(♯) :: String → IO () → IO ()
+r ♯ a = obj r a
+
+-- Unicode Obj' operator
+(♯♯) :: (String, [String]) → IO () → IO ()
+r ♯♯ a = obj' r a

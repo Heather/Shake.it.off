@@ -1,5 +1,5 @@
 name:           ShakeItOff
-version:        0.0.3
+version:        0.0.4
 license:        BSD3
 category:       Development
 
@@ -12,6 +12,7 @@ library
       Shake.It.Off
   Other-Modules:
       Shake.It.Core
+      Shake.It.Global
       Shake.It.Version
       Shake.It.Haskell.Cabal
       Shake.It.Haskell
