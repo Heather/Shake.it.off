@@ -66,10 +66,7 @@ phony' (arg, deps) complexPhonyAction = do
           when (dep == file) $
             compileObj file buildAction
         forM_ myPhonyActions $ \(rule, phonyAction) →
-          when (dep == rule) $ do
-            phonyAction
-            removePhonyArg myPhonyArgs rule
-            return ()
+          when (dep == rule) $ compilePhony rule phonyAction
       complexPhonyAction
       filtered ← removePhonyArg myPhonyArgs arg
       when (null filtered) exitSuccess
@@ -95,10 +92,7 @@ obj' (arg, deps) complexBuildAction = do
       when (dep == file) $
         compileObj file buildAction
     forM_ myPhonyActions $ \(rule, phonyAction) →
-      when (dep == rule) $ do
-        phonyAction
-        removePhonyArg myPhonyArgs rule
-        return ()
+      when (dep == rule) $ compilePhony rule phonyAction
   let new = (arg, complexBuildAction) : myObjects
   writeIORef objectsList (arg : myObjectList)
   writeIORef objects new

@@ -6,6 +6,7 @@ module Shake.It.Core
   ( checkExitCode
   , exitWithError
   , removePhonyArg
+  , compilePhony
   , compileObj
   , module Shake.It.Global
   ) where
@@ -35,6 +36,14 @@ removePhonyArg args arg = do
   let filtered = filter (/= arg) args
   writeIORef phonyArgs filtered
   return filtered
+
+compilePhony :: String → IO () → IO ()
+compilePhony rule phonyAction = do
+  myPhonyArgs ← readIORef phonyArgs
+  when (rule ∈ myPhonyArgs) $ do
+    phonyAction
+    removePhonyArg myPhonyArgs rule
+    return ()
 
 compileObj :: String → IO () → IO ()
 compileObj file buildAction = do
