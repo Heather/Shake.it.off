@@ -1,5 +1,6 @@
 {-# LANGUAGE
     UnicodeSyntax
+  , MultiWayIf
   #-}
 
 module Shake.It.Core
@@ -12,8 +13,9 @@ module Shake.It.Core
   ) where
 
 import System.Exit
-import System.FilePath ((</>))
+import System.FilePath
 import System.Directory
+import System.Info (os)
 
 import Data.IORef
 
@@ -50,7 +52,16 @@ compileObj file buildAction = do
   currentObjectList ← readIORef objectsList
   when (file ∈ currentObjectList) $ do
     currentDir ← getCurrentDirectory
-    let fullPath = currentDir </> file
+    let fileOS =
+          if | takeExtension file == ".exe" →
+                if | os ∈ ["win32", "mingw32", "cygwin32"] → file
+                   | otherwise → dropExtension file
+             | takeExtension file == ".dll" →
+                if | os ∈ ["win32", "mingw32", "cygwin32"] → file
+                   | otherwise → addExtension (dropExtension file) ".so"
+             | otherwise → file
+
+    let fullPath = currentDir </> fileOS
     buildAction -- building this file
     objExists ← doesFileExist fullPath
     unless objExists $ exitWithError (fullPath ++ " doesn't exists")

@@ -14,6 +14,7 @@
 module Shake.It.Off
   ( shake
   , phony, obj
+  , (</>) -- FilePath thing
   , (◉)
   , (#>), (@>), (##>), (@@>)
   , (♯), (♯♯)
