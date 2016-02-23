@@ -24,7 +24,7 @@ showMyV     :: String
 showMyV      = showVersion My.version
 
 showV       :: ∀ τ β. τ → IO β
-showV _      = printf showMyV >> exitSuccess
+showV _      = printf ("Shake it off v." ++ showMyV) >> exitSuccess
 
 showHelp    :: ∀ τ β α. [OptDescr α] → τ → IO β
 showHelp o _ = putStrLn (usageInfo "Usage: shake" o)

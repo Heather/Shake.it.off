@@ -2,6 +2,8 @@
 
 import Shake.It.Off
 
+import System.Process
+
 main :: IO ()
 main = shake $ do
   -- phony clean @> is non-unicode operator alternative
@@ -17,6 +19,10 @@ main = shake $ do
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
   "install" ◉ [buildPath </> "shake.exe"] ∰
     cabal ["install"]
+
+  "test" ◉ [buildPath </> "shake.exe"] ∰ do
+    rawSystem (buildPath </> "shake.exe") ["--version"]
+      >>= checkExitCode
 
  where buildPath :: String
        buildPath = "dist/build/Shake"
