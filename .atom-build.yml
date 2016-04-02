@@ -4,7 +4,7 @@ args:
  - --force-reinstall
 name: cabal install
 targets:
-  - test:
+  test:
     cmd: shake
     args:
       - -f
