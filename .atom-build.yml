@@ -1,0 +1,4 @@
+cmd: cabal
+args:
+ - install
+name: cabal install
