@@ -28,7 +28,6 @@ library
     , filepath
     , time
     , eternal
-    , turtle
 
 Executable    shake
   Main-Is:    Main.hs
@@ -44,7 +43,6 @@ Executable    shake
     , filepath
     , time
     , eternal
-    , turtle
     , MissingH
     , ShakeItOff
 

@@ -11,7 +11,6 @@ Features
  - Compile shake.it.off script only when shake.it really changes!
  - Contains many (and adding) handy functions for creating build scripts everywhere!
  - You can think of pony when you use phony... (it's in early stage)
- - turtle powered (e.g. provides with https://github.com/Gabriel439/Haskell-Turtle-Library)
 
 Operators
 ---------

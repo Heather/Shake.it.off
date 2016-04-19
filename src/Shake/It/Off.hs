@@ -20,7 +20,6 @@ module Shake.It.Off
   , (♯), (♯♯)
   , (∫), (∰)
   , module Shake
-  , module Turtle
   ) where
 
 import System.Process
@@ -38,8 +37,6 @@ import Shake.It.Core as Shake
 import Shake.It.Version as Shake
 import Shake.It.C as Shake
 import Shake.It.Haskell as Shake
-
-import Turtle hiding (FilePath, stdout, stderr, (</>))
 
 shake :: IO () → IO ()
 shake maybeAction = do
