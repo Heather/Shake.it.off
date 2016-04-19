@@ -85,7 +85,6 @@ obj arg buildAction = do
 
 obj' :: (FilePath, [String]) → IO () → IO ()
 obj' (arg, deps) complexBuildAction = do
-  myPhonyArgs    ← readIORef phonyArgs
   myPhonyActions ← readIORef phonyActions
   myObjects      ← readIORef objects
   myObjectList   ← readIORef objectsList
