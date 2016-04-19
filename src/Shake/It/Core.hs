@@ -40,9 +40,9 @@ removePhonyArg args arg = do
 
 compilePhony :: String → IO () → IO ()
 compilePhony rule phonyAction = do
+  phonyAction
   myPhonyArgs ← readIORef phonyArgs
   when (rule ∈ myPhonyArgs) $ do
-    phonyAction
     removePhonyArg myPhonyArgs rule
     return ()
 
