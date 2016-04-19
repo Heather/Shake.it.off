@@ -1,5 +1,6 @@
 module Shake.It.Haskell
-  ( module Shake.It.Haskell.Cabal
+  ( module Haskell
   ) where
 
-import Shake.It.Haskell.Cabal
+import Shake.It.Haskell.Cabal as Haskell
+import Shake.It.Haskell.Stack as Haskell

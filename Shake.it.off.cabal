@@ -1,5 +1,5 @@
 name:           ShakeItOff
-version:        0.0.6
+version:        0.0.7
 license:        BSD3
 category:       Development
 
@@ -15,6 +15,7 @@ library
       Shake.It.Global
       Shake.It.Version
       Shake.It.Haskell.Cabal
+      Shake.It.Haskell.Stack
       Shake.It.Haskell
       Paths_ShakeItOff
   Build-Depends:
