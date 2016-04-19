@@ -1,5 +1,5 @@
 name:           ShakeItOff
-version:        0.0.8
+version:        0.0.9
 license:        BSD3
 category:       Development
 
@@ -27,6 +27,7 @@ library
     , filepath
     , time
     , eternal
+    , turtle
 
 Executable    shake
   Main-Is:    Main.hs
@@ -42,6 +43,7 @@ Executable    shake
     , filepath
     , time
     , eternal
+    , turtle
     , MissingH
     , ShakeItOff
 

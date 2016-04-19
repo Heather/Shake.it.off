@@ -14,12 +14,13 @@
 module Shake.It.Off
   ( shake
   , phony, obj
-  , (</>) -- FilePath thing
+  , (</>) -- Filepath
   , (◉)
   , (#>), (@>), (##>), (@@>)
   , (♯), (♯♯)
   , (∫), (∰)
   , module Shake
+  , module Turtle
   ) where
 
 import System.Process
@@ -37,6 +38,8 @@ import Shake.It.Core as Shake
 import Shake.It.Version as Shake
 import Shake.It.C as Shake
 import Shake.It.Haskell as Shake
+
+import Turtle hiding (FilePath, stdout, stderr, (</>))
 
 shake :: IO () → IO ()
 shake maybeAction = do
@@ -83,7 +86,7 @@ obj arg buildAction = do
   writeIORef objectsList (arg : currentObjectList)
   writeIORef objects new
 
-obj' :: (String, [String]) → IO () → IO ()
+obj' :: (FilePath, [String]) → IO () → IO ()
 obj' (arg, deps) complexBuildAction = do
   myPhonyArgs    ← readIORef phonyArgs
   myPhonyActions ← readIORef phonyActions
@@ -131,9 +134,9 @@ r #> a = obj r a
 r ##> a = obj' r a
 
 -- Unicode Obj operator
-(♯) :: String → IO () → IO ()
+(♯) :: FilePath → IO () → IO ()
 r ♯ a = obj r a
 
 -- Unicode Obj' operator
-(♯♯) :: (String, [String]) → IO () → IO ()
+(♯♯) :: (FilePath, [String]) → IO () → IO ()
 r ♯♯ a = obj' r a
