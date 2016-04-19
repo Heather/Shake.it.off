@@ -35,6 +35,7 @@ import Control.Eternal
 
 import Shake.It.Core as Shake
 import Shake.It.Version as Shake
+import Shake.It.C as Shake
 import Shake.It.Haskell as Shake
 
 shake :: IO () → IO ()
