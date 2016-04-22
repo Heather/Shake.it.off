@@ -1,6 +1,5 @@
 {-# LANGUAGE
     UnicodeSyntax
-  , Safe
   #-}
 
 module Shake.It.FileSystem
@@ -9,3 +8,4 @@ module Shake.It.FileSystem
 
 import Shake.It.FileSystem.Dir as FileSystem
 import Shake.It.FileSystem.File as FileSystem
+import Shake.It.FileSystem.Misc as FileSystem
