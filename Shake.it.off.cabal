@@ -16,7 +16,6 @@ library
       Shake.It.Version
       Shake.It.FileSystem.File
       Shake.It.FileSystem.Dir
-      Shake.It.FileSystem.Misc
       Shake.It.FileSystem
       Shake.It.C.CMake
       Shake.It.C
