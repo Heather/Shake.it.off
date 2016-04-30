@@ -14,7 +14,6 @@
 module Shake.It.Off
   ( shake
   , phony, obj
-  , (</>) -- Filepath
   , (◉)
   , (#>), (@>), (##>), (@@>)
   , (♯), (♯♯)
@@ -22,24 +21,16 @@ module Shake.It.Off
   , module Shake
   ) where
 
-import System.Process
-import System.Environment
-import System.Exit
-import System.Directory
-import System.FilePath ((</>))
-
 import Data.IORef
 
 import Control.Monad
 import Control.Eternal
 
-import Shake.It.Core as Shake
-import Shake.It.Version as Shake
-
-import Shake.It.FileSystem as Shake
-
-import Shake.It.C as Shake
-import Shake.It.Haskell as Shake
+import Shake.It.Core        as Shake
+import Shake.It.Version     as Shake
+import Shake.It.FileSystem  as Shake
+import Shake.It.C           as Shake
+import Shake.It.Haskell     as Shake
 
 shake :: IO () → IO ()
 shake maybeAction = do

@@ -9,16 +9,13 @@
 module Shake
   ( shakeIt
   , shakeItOff
+  , module Shake.It.Off
   ) where
 
 import Script
+import Shake.It.Off
 
-import System.Info (os)
-import System.Exit
-import System.Directory
 import System.IO
-import System.FilePath ((</>))
-import System.Process
 
 import Data.String.Utils
 

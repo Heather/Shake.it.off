@@ -2,8 +2,6 @@
 
 import Shake.It.Off
 
-import System.Process
-
 main :: IO ()
 main = shake $ do
   -- phony clean @> is non-unicode operator alternative

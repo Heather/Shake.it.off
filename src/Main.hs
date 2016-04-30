@@ -12,20 +12,13 @@ import Shake
 import Foreign.Storable (sizeOf)
 
 import System.Console.GetOpt
-import System.Info (os)
-import System.Environment( getArgs )
-import System.Exit
-import System.Directory
 import System.IO
-import System.Process
 
 import Control.Applicative
 import Control.Monad
 import Control.Exception
 import Control.Eternal
 import Control.Concurrent
-
-import Shake.It.Off
 
 main ∷ IO ()
 main = do

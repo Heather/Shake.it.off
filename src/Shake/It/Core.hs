@@ -8,13 +8,16 @@ module Shake.It.Core
   , removePhonyArg
   , compilePhony
   , compileObj
+  , module MustHave
   , module Shake.It.Global
   ) where
 
-import System.Exit
-import System.FilePath
-import System.Directory
-import System.Info (os)
+import System.Exit          as MustHave
+import System.FilePath      as MustHave
+import System.Directory     as MustHave
+import System.Info          as MustHave
+import System.Process       as MustHave
+import System.Environment   as MustHave
 
 import Data.IORef
 
