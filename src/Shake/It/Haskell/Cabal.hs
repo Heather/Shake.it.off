@@ -6,10 +6,7 @@
     ( cabal
     ) where
 
-import System.Process
-
 import Control.Monad
-
 import Shake.It.Core
 
 cabal :: [String] → IO ()

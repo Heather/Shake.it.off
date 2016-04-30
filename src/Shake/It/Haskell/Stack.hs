@@ -6,10 +6,7 @@
     ( stack
     ) where
 
-import System.Process
-
 import Control.Monad
-
 import Shake.It.Core
 
 stack :: [String] → IO ()
