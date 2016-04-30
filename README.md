@@ -12,6 +12,13 @@ Features
  - Contains many (and adding) handy functions for creating build scripts everywhere!
  - You can think of pony when you use phony... (it's in early stage)
 
+TODO
+----
+
+ - option for `.atom-build.yml` file generation
+ - resolve issues with very complicated dependies
+ - document code
+
 Operators
 ---------
 
@@ -102,9 +109,6 @@ main = shake $ do
  where buildPath :: String
        buildPath = "dist/build/Shake"
 ```
-
- - `.dll` extensions treated as `.so` on linux and `.exe` extensions will be dropped there.
- - TODO: it honestly should be optional and no need for .NET
 
 User story
 ----------

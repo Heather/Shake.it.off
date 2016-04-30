@@ -1,7 +1,6 @@
 cmd: cabal
 args:
  - install
- - --force-reinstall
 name: cabal install
 targets:
   test:
