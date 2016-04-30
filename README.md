@@ -15,6 +15,7 @@ Features
 TODO
 ----
 
+ - plugin system
  - option for `.atom-build.yml` file generation
  - resolve issues with very complicated dependies
  - document code
