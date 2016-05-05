@@ -1,8 +1,13 @@
-cmd: cabal
+cmd: stack
 args:
  - install
-name: cabal install
+name: stack install
 targets:
+  cabal:
+    cmd: cabal
+    args:
+      - install
+    name: cabal
   force-reinstall:
     cmd: cabal
     args:
