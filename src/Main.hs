@@ -27,18 +27,7 @@ main = do
   let (actions, _, _) = getOpt RequireOrder shakeOptions shakeArgs
   Options { optPlatform = platform, optForce = force
           } ← foldl (>>=) (return defaultOptions) actions
-  let lock = current </> "shake.it.lock"
-      gogo = shakeIt shakeArgs current force platform
-      start = myThreadId >>= \t → withFile lock WriteMode (const gogo)
-                                     `finally` removeFile lock
-  locked ← doesFileExist lock
-  if locked then do putStrLn "There is already one instance of shake running."
-                    putStrLn "Remove lock and start again? (Y/N)"
-                    hFlush stdout
-                    getLine >>= \case w | w ∈ ["Y", "y"] → start
-                                      w | w ∈ ["N", "n"] → return ()
-                                      _ → return ()
-            else start
+  shakeIt shakeArgs current force platform
 
 data Options = Options
   { optPlatform  ∷ String, optForce ∷ Bool
