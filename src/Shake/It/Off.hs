@@ -34,10 +34,19 @@ import Shake.It.Haskell     as Shake
 
 shake :: IO () → IO ()
 shake maybeAction = do
-  getArgs >>= writeIORef phonyArgs
+  args ← getArgs
+  writeIORef phonyArgs args
   maybeAction
-  myObjects ← readIORef objects
-  forM_ myObjects $ uncurry compileObj
+  if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
+     | otherwise → do
+        myObjects ← readIORef objects
+        forM_ myObjects $ uncurry compileObj
+
+displayHelp :: IO ()
+displayHelp = do
+  myPhonyActions ← readIORef phonyActions
+  forM_ (reverse myPhonyActions) $ \(r, _, d) →
+    putStrLn $ "  " ++ r ++ " : " ++ d
 
 phony :: String → IO () → IO ()
 phony arg phonyAction = do
@@ -47,7 +56,7 @@ phony arg phonyAction = do
             filtered ← removePhonyArg args arg
             when (null filtered) exitSuccess
     else do currentPhony ← readIORef phonyActions
-            let new = (arg, phonyAction) : currentPhony
+            let new = (arg, phonyAction, "TODO") : currentPhony
             writeIORef phonyActions new
 
 phony' :: (String, [String]) → IO () → IO ()
@@ -61,12 +70,12 @@ phony' (arg, deps) complexPhonyAction = do
         forM_ myObjects $ \(file, buildAction) →
           when (dep == file) $
             compileObj file buildAction
-        forM_ myPhonyActions $ \(rule, phonyAction) →
+        forM_ myPhonyActions $ \(rule, phonyAction, _) →
           when (dep == rule) $ compilePhony rule phonyAction
       complexPhonyAction
       filtered ← removePhonyArg myPhonyArgs arg
       when (null filtered) exitSuccess
-    else let new = (arg, complexPhonyAction) : myPhonyActions
+    else let new = (arg, complexPhonyAction, "TODO") : myPhonyActions
          in writeIORef phonyActions new
 
 obj :: FilePath → IO () → IO ()
@@ -86,7 +95,7 @@ obj' (arg, deps) complexBuildAction = do
     forM_ myObjects $ \(file, buildAction) →
       when (dep == file) $
         compileObj file buildAction
-    forM_ myPhonyActions $ \(rule, phonyAction) →
+    forM_ myPhonyActions $ \(rule, phonyAction, _) →
       when (dep == rule) $ compilePhony rule phonyAction
   let new = (arg, complexBuildAction) : myObjects
   writeIORef objectsList (arg : myObjectList)

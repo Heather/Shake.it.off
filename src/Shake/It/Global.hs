@@ -13,7 +13,7 @@ phonyArgs :: IORef [String]
 {-# NOINLINE phonyArgs #-}
 phonyArgs = unsafePerformIO (newIORef [])
 
-phonyActions :: IORef [(String, IO ())]
+phonyActions :: IORef [(String, IO (), String)]
 {-# NOINLINE phonyActions #-}
 phonyActions = unsafePerformIO (newIORef [])
 

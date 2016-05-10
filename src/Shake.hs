@@ -33,7 +33,9 @@ shakeIt args current force _ = do -- _ is Platform
   existshs  ← doesFileExist fullNamehs
   if | existslhs → shakeShake fullNamelhs
      | existshs  → shakeShake fullNamehs
-     | otherwise → putStrLn "no shake.it.hs / shake.it.lhs file"
+     | otherwise →
+        unless ("-h" ∈ args ∨ "--help" ∈ args) $
+          putStrLn "no shake.it.hs / shake.it.lhs file"
 
 shakeItOff :: [String] → String → Bool → String → IO ()
 shakeItOff args dir force shakefile = do

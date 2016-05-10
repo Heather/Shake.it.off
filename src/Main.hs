@@ -30,7 +30,8 @@ main = do
   shakeIt shakeArgs current force platform
 
 data Options = Options
-  { optPlatform  ∷ String, optForce ∷ Bool
+  { optPlatform ∷ String
+  , optForce    ∷ Bool
   }
 
 defaultOptions ∷ Options
@@ -46,7 +47,7 @@ defaultOptions = Options {
 shakeOptions ∷ [OptDescr (Options → IO Options)]
 shakeOptions = [
   Option "v" ["version"]  (NoArg showV) "Display Version",
-  Option "h" ["help"]     (NoArg (showHelp shakeOptions)) "Display Help",
+  Option "h" ["help"]     (NoArg displayHelp) "Display Help",
   Option "p" ["platform"] (ReqArg getp "STRING") "operating system platform",
   Option "f" ["force"]    (NoArg forceRebuild) "force script rebuild"
   ]
@@ -56,3 +57,7 @@ forceRebuild :: ∀ (m :: * → *). Monad m ⇒ Options → m Options
 
 getp arg opt      = return opt { optPlatform = arg }
 forceRebuild opt  = return opt { optForce = True }
+displayHelp opt   = do
+  prg ← getProgName
+  hPutStrLn stderr (usageInfo prg shakeOptions)
+  return opt { optForce = True }
