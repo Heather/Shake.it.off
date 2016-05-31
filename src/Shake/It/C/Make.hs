@@ -1,17 +1,15 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  #-}
+{-# LANGUAGE UnicodeSyntax #-}
 
 module Shake.It.C.Make
   ( make
   , configure
   ) where
 
-import Control.Monad
-import Shake.It.Core
+import           Control.Monad
+import           Shake.It.Core
 
-configure :: [String] → IO ()
-configure a = rawSystem "configure" a >>= checkExitCode
+configure ∷ [String] → IO ()
+configure α = rawSystem "configure" α >>= checkExitCode
 
-make :: [String] → IO ()
-make a = rawSystem "make" a >>= checkExitCode
+make ∷ [String] → IO ()
+make α = rawSystem "make" α >>= checkExitCode

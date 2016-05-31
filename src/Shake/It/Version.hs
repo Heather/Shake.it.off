@@ -1,7 +1,5 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  , RankNTypes
-  #-}
+{-# LANGUAGE RankNTypes    #-}
+{-# LANGUAGE UnicodeSyntax #-}
 
 module Shake.It.Version
   ( showHelp
@@ -9,23 +7,23 @@ module Shake.It.Version
   , printVersion
   ) where
 
-import Text.Printf
+import           Text.Printf
 
-import System.Exit
-import System.Console.GetOpt
+import           System.Console.GetOpt
+import           System.Exit
 
-import qualified Paths_ShakeItOff as My
-import Data.Version (showVersion)
+import           Data.Version          (showVersion)
+import qualified Paths_ShakeItOff      as My
 
-printVersion :: IO ()
+printVersion ∷ IO ()
 printVersion = putStrLn $ showVersion My.version
 
-showMyV     :: String
+showMyV     ∷ String
 showMyV      = showVersion My.version
 
-showV       :: ∀ τ β. τ → IO β
+showV       ∷ ∀ τ β. τ → IO β
 showV _      = printf ("Shake it off v." ++ showMyV) >> exitSuccess
 
-showHelp    :: ∀ τ β α. [OptDescr α] → τ → IO β
+showHelp    ∷ ∀ τ β α. [OptDescr α] → τ → IO β
 showHelp o _ = putStrLn (usageInfo "Usage: shake" o)
                   >> exitSuccess

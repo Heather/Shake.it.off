@@ -1,3 +1,5 @@
+{-# LANGUAGE UnicodeSyntax #-}
+
 module Shake.It.Global
   ( phonyArgs
   , phonyActions
@@ -5,22 +7,22 @@ module Shake.It.Global
   , objectsList
   ) where
 
-import System.IO.Unsafe
+import           System.IO.Unsafe
 
-import Data.IORef
+import           Data.IORef
 
-phonyArgs :: IORef [String]
+phonyArgs ∷ IORef [String]
 {-# NOINLINE phonyArgs #-}
 phonyArgs = unsafePerformIO (newIORef [])
 
-phonyActions :: IORef [(String, IO (), String)]
+phonyActions ∷ IORef [(String, IO (), String)]
 {-# NOINLINE phonyActions #-}
 phonyActions = unsafePerformIO (newIORef [])
 
-objects :: IORef [(String, IO ())]
+objects ∷ IORef [(String, IO ())]
 {-# NOINLINE objects #-}
 objects = unsafePerformIO (newIORef [])
 
-objectsList :: IORef [String]
+objectsList ∷ IORef [String]
 {-# NOINLINE objectsList #-}
 objectsList = unsafePerformIO (newIORef [])

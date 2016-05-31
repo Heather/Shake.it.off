@@ -1,10 +1,8 @@
-{-# LANGUAGE
-    CPP
-  , MultiWayIf
-  , LambdaCase
-  , UnicodeSyntax
-  , RankNTypes
-  #-}
+{-# LANGUAGE CPP           #-}
+{-# LANGUAGE LambdaCase    #-}
+{-# LANGUAGE MultiWayIf    #-}
+{-# LANGUAGE RankNTypes    #-}
+{-# LANGUAGE UnicodeSyntax #-}
 
 module Shake
   ( shakeIt
@@ -12,19 +10,19 @@ module Shake
   , module Shake.It.Off
   ) where
 
-import Script
-import Shake.It.Off
+import           Script
+import           Shake.It.Off
 
-import System.IO
+import           System.IO
 
-import Data.String.Utils
+import           Data.String.Utils
 
-import Control.Monad
-import Control.Exception
-import Control.Eternal
-import Control.Concurrent
+import           Control.Concurrent
+import           Control.Eternal
+import           Control.Exception
+import           Control.Monad
 
-shakeIt :: [String] → String → Bool → String → IO ()
+shakeIt ∷ [String] → String → Bool → String → IO ()
 shakeIt args current force _ = do -- _ is Platform
   let fullNamelhs = current </> "shake.it.lhs"
       fullNamehs  = current </> "shake.it.hs"
@@ -37,7 +35,7 @@ shakeIt args current force _ = do -- _ is Platform
         unless ("-h" ∈ args ∨ "--help" ∈ args) $
           putStrLn "no shake.it.hs / shake.it.lhs file"
 
-shakeItOff :: [String] → String → Bool → String → IO ()
+shakeItOff ∷ [String] → String → Bool → String → IO ()
 shakeItOff args dir force shakefile = do
   let cscr = if | os ∈ ["win32", "mingw32", "cygwin32"] → "shake.it.off.exe"
                 | otherwise → "shake.it.off"
@@ -52,18 +50,18 @@ shakeItOff args dir force shakefile = do
        | otherwise → return True
 
   when doRecompile $ system ("ghc --make -o " ++ cscr ++ " " ++ shakefile)
-                   >>= \case ExitFailure i → do
-                               hPrint stderr i
+                   >>= \case ExitFailure ε → do
+                               hPrint stderr ε
                                exitFailure
                              ExitSuccess → return ()
 
   let ifForce =
-        if | force → filter (\o → o /= "-f"
-                               && o /= "--force") args
+        if | force → filter (\ο → ο /= "-f"
+                               && ο /= "--force") args
            | otherwise → args
       ifPlatform =
-        if | force → filter (\o → not (startswith "-p" o
-                                    || startswith "--platform" o)) ifForce
+        if | force → filter (\ο → not (startswith "-p" ο
+                                    || startswith "--platform" ο)) ifForce
            | otherwise → ifForce
 
   runShake cscr ifPlatform

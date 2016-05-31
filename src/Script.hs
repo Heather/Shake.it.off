@@ -1,38 +1,36 @@
-{-# LANGUAGE
-    CPP
-  , MultiWayIf
-  , LambdaCase
-  , UnicodeSyntax
-  , RankNTypes
-  #-}
+{-# LANGUAGE CPP            #-}
+{-# LANGUAGE MultiWayIf     #-}
+{-# LANGUAGE LambdaCase     #-}
+{-# LANGUAGE UnicodeSyntax  #-}
+{-# LANGUAGE RankNTypes     #-}
 
 module Script
   ( getMTime
   , runShake
   ) where
 
-import System.Directory (getModificationTime)
-import System.Process
-import System.Exit
-import System.IO
+import           System.Directory (getModificationTime)
+import           System.Process
+import           System.Exit
+import           System.IO
 
-import Data.Time.Clock
-import Data.List
+import           Data.Time.Clock
+import           Data.List
 
 #if ! ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
-import System.Posix.Process
-import System.Posix.Files
-import System.Posix.Types
+import           System.Posix.Process
+import           System.Posix.Files
+import           System.Posix.Types
 #endif
 
-import Control.Monad
+import           Control.Monad
 
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 getMTime :: FilePath → IO UTCTime
 getMTime f = getModificationTime f
 #else
 getMTime :: FilePath → IO EpochTime
-getMTime f = liftM modificationTime (getFileStatus f)
+getMTime f = fmap modificationTime (getFileStatus f)
 #endif
 
 runShake :: String → [String] → IO ()

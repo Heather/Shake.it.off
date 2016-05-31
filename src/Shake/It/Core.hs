@@ -1,6 +1,4 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  #-}
+{-# LANGUAGE UnicodeSyntax #-}
 
 module Shake.It.Core
   ( checkExitCode
@@ -12,36 +10,36 @@ module Shake.It.Core
   , module Shake.It.Global
   ) where
 
-import System.Exit          as MustHave
-import System.FilePath      as MustHave
-import System.Directory     as MustHave
-import System.Info          as MustHave
-import System.Process       as MustHave
-import System.Environment   as MustHave
+import           System.Directory   as MustHave
+import           System.Environment as MustHave
+import           System.Exit        as MustHave
+import           System.FilePath    as MustHave
+import           System.Info        as MustHave
+import           System.Process     as MustHave
 
-import Data.IORef
+import           Data.IORef
 
-import Control.Monad
-import Control.Eternal
+import           Control.Eternal
+import           Control.Monad
 
-import Shake.It.Global
+import           Shake.It.Global
 
-exitWithError :: String → IO ()
-exitWithError msg = do putStrLn $ "Error: " ++ msg
-                       exitFailure
+exitWithError ∷ String → IO ()
+exitWithError μ = do putStrLn $ "Error: " ++ μ
+                     exitFailure
 
-checkExitCode :: ExitCode → IO ()
+checkExitCode ∷ ExitCode → IO ()
 checkExitCode ExitSuccess = return ()
-checkExitCode (ExitFailure code) =
-    error $ "failed with exit code: " ++ show code
+checkExitCode (ExitFailure γ) =
+    error $ "failed with exit code: " ++ show γ
 
-removePhonyArg :: [String] → String → IO [String]
+removePhonyArg ∷ [String] → String → IO [String]
 removePhonyArg args arg = do
   let filtered = filter (/= arg) args
   writeIORef phonyArgs filtered
   return filtered
 
-compilePhony :: String → IO () → IO ()
+compilePhony ∷ String → IO () → IO ()
 compilePhony rule phonyAction = do
   phonyAction
   myPhonyArgs ← readIORef phonyArgs
@@ -49,7 +47,7 @@ compilePhony rule phonyAction = do
     removePhonyArg myPhonyArgs rule
     return ()
 
-compileObj :: String → IO () → IO ()
+compileObj ∷ String → IO () → IO ()
 compileObj file buildAction = do
   currentObjectList ← readIORef objectsList
   when (file ∈ currentObjectList) $ do

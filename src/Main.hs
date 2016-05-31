@@ -1,24 +1,22 @@
-{-# LANGUAGE
-    CPP
-  , MultiWayIf
-  , LambdaCase
-  , UnicodeSyntax
-  , RankNTypes
-  , KindSignatures
-  #-}
+{-# LANGUAGE CPP            #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE LambdaCase     #-}
+{-# LANGUAGE MultiWayIf     #-}
+{-# LANGUAGE RankNTypes     #-}
+{-# LANGUAGE UnicodeSyntax  #-}
 
-import Shake
+import           Shake
 
-import Foreign.Storable (sizeOf)
+import           Foreign.Storable      (sizeOf)
 
-import System.Console.GetOpt
-import System.IO
+import           System.Console.GetOpt
+import           System.IO
 
-import Control.Applicative
-import Control.Monad
-import Control.Exception
-import Control.Eternal
-import Control.Concurrent
+import           Control.Applicative
+import           Control.Concurrent
+import           Control.Eternal
+import           Control.Exception
+import           Control.Monad
 
 main ∷ IO ()
 main = do
@@ -52,12 +50,12 @@ shakeOptions = [
   Option "f" ["force"]    (NoArg forceRebuild) "force script rebuild"
   ]
 
-getp :: ∀ (m :: * → *). Monad m         ⇒ String → Options → m Options
-forceRebuild :: ∀ (m :: * → *). Monad m ⇒ Options → m Options
+getp ∷ ∀ (m :: * → *). Monad m         ⇒ String → Options → m Options
+forceRebuild ∷ ∀ (m :: * → *). Monad m ⇒ Options → m Options
 
-getp arg opt      = return opt { optPlatform = arg }
-forceRebuild opt  = return opt { optForce = True }
-displayHelp opt   = do
+getp arg ο      = return ο { optPlatform = arg }
+forceRebuild ο  = return ο { optForce = True }
+displayHelp ο   = do
   prg ← getProgName
   hPutStrLn stderr (usageInfo prg shakeOptions)
-  return opt { optForce = True }
+  return ο { optForce = True }

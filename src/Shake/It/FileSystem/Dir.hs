@@ -1,30 +1,28 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  , Safe
-  #-}
+{-# LANGUAGE Safe          #-}
+{-# LANGUAGE UnicodeSyntax #-}
 
 module Shake.It.FileSystem.Dir
   ( removeDirIfExists
   , copyDir
   ) where
 
-import Prelude hiding (catch)
-import System.Directory
-import Control.Exception
-import System.IO.Error hiding (catch)
-import Control.Monad(forM_)
+import           Control.Exception
+import           Control.Monad          (forM_)
+import           Prelude                hiding (catch)
+import           System.Directory
+import           System.IO.Error        hiding (catch)
 
-import System.FilePath((</>))
+import           System.FilePath        ((</>))
 
-import Control.Eternal.Syntax
+import           Control.Eternal.Syntax
 
-removeDirIfExists :: FilePath → IO ()
-removeDirIfExists dirName = removeDirectoryRecursive dirName `catch` handleExists
-  where handleExists e
-          | isDoesNotExistError e = return ()
-          | otherwise = throwIO e
+removeDirIfExists ∷ FilePath → IO ()
+removeDirIfExists δ = removeDirectoryRecursive δ `catch` handleExists
+  where handleExists ε
+          | isDoesNotExistError ε = return ()
+          | otherwise = throwIO ε
 
-copyDir :: FilePath -- source
+copyDir ∷ FilePath -- source
          → FilePath -- destination
          → IO ()
 copyDir src dst = do

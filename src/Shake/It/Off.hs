@@ -1,15 +1,13 @@
-{-# LANGUAGE
-    CPP
-  , MultiWayIf
-  , LambdaCase
-  , UnicodeSyntax
-  , RankNTypes
-  , DataKinds
-  , OverloadedStrings
-  , MultiParamTypeClasses
-  , FlexibleInstances
-  , FlexibleContexts
-  #-}
+{-# LANGUAGE CPP                   #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE LambdaCase            #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiWayIf            #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE UnicodeSyntax         #-}
 
 module Shake.It.Off
   ( shake
@@ -21,18 +19,18 @@ module Shake.It.Off
   , module Shake
   ) where
 
-import Data.IORef
+import           Data.IORef
 
-import Control.Monad
-import Control.Eternal
+import           Control.Eternal
+import           Control.Monad
 
-import Shake.It.Core        as Shake
-import Shake.It.Version     as Shake
-import Shake.It.FileSystem  as Shake
-import Shake.It.C           as Shake
-import Shake.It.Haskell     as Shake
+import           Shake.It.C          as Shake
+import           Shake.It.Core       as Shake
+import           Shake.It.FileSystem as Shake
+import           Shake.It.Haskell    as Shake
+import           Shake.It.Version    as Shake
 
-shake :: IO () → IO ()
+shake ∷ IO () → IO ()
 shake maybeAction = do
   args ← getArgs
   writeIORef phonyArgs args
@@ -42,13 +40,13 @@ shake maybeAction = do
         myObjects ← readIORef objects
         forM_ myObjects $ uncurry compileObj
 
-displayHelp :: IO ()
+displayHelp ∷ IO ()
 displayHelp = do
   myPhonyActions ← readIORef phonyActions
   forM_ (reverse myPhonyActions) $ \(r, _, d) →
     putStrLn $ "  " ++ r ++ " : " ++ d
 
-phony :: String → IO () → IO ()
+phony ∷ String → IO () → IO ()
 phony arg phonyAction = do
   args ← readIORef phonyArgs
   if arg ∈ args
@@ -59,7 +57,7 @@ phony arg phonyAction = do
             let new = (arg, phonyAction, "TODO") : currentPhony
             writeIORef phonyActions new
 
-phony' :: (String, [String]) → IO () → IO ()
+phony' ∷ (String, [String]) → IO () → IO ()
 phony' (arg, deps) complexPhonyAction = do
   myPhonyArgs ← readIORef phonyArgs
   myPhonyActions ← readIORef phonyActions
@@ -78,7 +76,7 @@ phony' (arg, deps) complexPhonyAction = do
     else let new = (arg, complexPhonyAction, "TODO") : myPhonyActions
          in writeIORef phonyActions new
 
-obj :: FilePath → IO () → IO ()
+obj ∷ FilePath → IO () → IO ()
 obj arg buildAction = do
   currentObjects ← readIORef objects
   currentObjectList ← readIORef objectsList
@@ -86,7 +84,7 @@ obj arg buildAction = do
   writeIORef objectsList (arg : currentObjectList)
   writeIORef objects new
 
-obj' :: (FilePath, [String]) → IO () → IO ()
+obj' ∷ (FilePath, [String]) → IO () → IO ()
 obj' (arg, deps) complexBuildAction = do
   myPhonyActions ← readIORef phonyActions
   myObjects      ← readIORef objects
@@ -105,37 +103,37 @@ obj' (arg, deps) complexBuildAction = do
 infixl 2 ∰, ◉, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
 -- tuple maker
-(◉) :: String → [String] → (String, [String])
+(◉) ∷ String → [String] → (String, [String])
 s ◉ ss = (s, ss)
 
 -- Phony operator
-(@>) :: String → IO () → IO ()
+(@>) ∷ String → IO () → IO ()
 r @> a = phony r a
 
 -- Phony' operator
-(@@>) :: (String, [String]) → IO () → IO ()
+(@@>) ∷ (String, [String]) → IO () → IO ()
 r @@> a = phony' r a
 
 -- Unicode variant of phony
-(∫) :: String → IO () → IO ()
+(∫) ∷ String → IO () → IO ()
 r ∫ a = phony r a
 
 -- Unicode variant of phony'
-(∰) :: (String, [String]) → IO () → IO ()
+(∰) ∷ (String, [String]) → IO () → IO ()
 r ∰ a = phony' r a
 
 -- Obj operator
-(#>) :: String → IO () → IO ()
+(#>) ∷ String → IO () → IO ()
 r #> a = obj r a
 
 -- Obj' operator
-(##>) :: (String, [String]) → IO () → IO ()
+(##>) ∷ (String, [String]) → IO () → IO ()
 r ##> a = obj' r a
 
 -- Unicode Obj operator
-(♯) :: FilePath → IO () → IO ()
+(♯) ∷ FilePath → IO () → IO ()
 r ♯ a = obj r a
 
 -- Unicode Obj' operator
-(♯♯) :: (FilePath, [String]) → IO () → IO ()
+(♯♯) ∷ (FilePath, [String]) → IO () → IO ()
 r ♯♯ a = obj' r a

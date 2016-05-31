@@ -1,8 +1,8 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
-import Shake.It.Off
+import           Shake.It.Off
 
-main :: IO ()
+main ∷ IO ()
 main = shake $ do
   -- phony clean @> is non-unicode operator alternative
   "clean" ∫ cabal ["clean"]
@@ -22,8 +22,8 @@ main = shake $ do
     rawSystem shakeExecutable ["--version"]
       >>= checkExitCode
 
- where buildPath :: String
+ where buildPath ∷ String
        buildPath = "dist/build/Shake"
 
-       shakeExecutable :: String
+       shakeExecutable ∷ String
        shakeExecutable = buildPath </> "shake.exe"
