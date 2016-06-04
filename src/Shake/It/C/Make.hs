@@ -24,7 +24,9 @@ nmake ∷ [String] → IO ()
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 vcshell [x] = do
   common ← getEnv $ "VS" ++ x ++ "COMNTOOLS"
-  return $ common </> ".." </> ".." </> "VC" </> "vcvarsall.bat"
+  return $ common </> ".."  </> ".."
+                  </> "VC"
+                  </> "vcvarsall.bat"
 vcshell (x:xs) = do
   vcx ← vcshell [x]
   if vcx /= [] then return vcx
