@@ -1,5 +1,5 @@
 name:           ShakeItOff
-version:        0.1.5
+version:        0.1.6
 license:        BSD3
 category:       Development
 
@@ -21,6 +21,8 @@ library
       Shake.It.C.CMake
       Shake.It.C.QMake
       Shake.It.C
+      Shake.It.Rust.Cargo
+      Shake.It.Rust
       Shake.It.Haskell.GHC
       Shake.It.Haskell.Cabal
       Shake.It.Haskell.Stack
