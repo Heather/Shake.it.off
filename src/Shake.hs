@@ -41,8 +41,8 @@ shakeItOff ∷ [String]
            → String
            → String
            → IO ()
-shakeItOff args dir force shakefile platform = do
-  let cscr = if | os ∈ ["win32", "mingw32", "cygwin32"] → "shake.it.off.exe"
+shakeItOff args dir force platform shakefile = do
+  let cscr = if | platform ∈ ["Win_x64", "Win"] → "shake.it.off.exe"
                 | otherwise → "shake.it.off"
 
   cscrExists  ← doesFileExist cscr
@@ -64,10 +64,7 @@ shakeItOff args dir force shakefile platform = do
         if | force → filter (\ο → ο /= "-f"
                                && ο /= "--force") args
            | otherwise → args
-      ifPlatform =
-        if | platform /= []
-              → filter (\ο → not (startswith "-p" ο
-                               || startswith "--platform" ο)) ifForce
-           | otherwise → ifForce
+      shArgs = filter (\ο → not (startswith "-p" ο
+                              || startswith "--platform" ο)) ifForce
 
-  runShake cscr ifPlatform
+  runShake cscr shArgs
