@@ -17,6 +17,7 @@ module Shake.It.Off
   , (♯), (♯♯)
   , (∫), (∰)
   , module Shake
+  , module Control.Eternal
   ) where
 
 import           Data.IORef

@@ -1,4 +1,5 @@
 {-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE MultiWayIf    #-}
 
 import           Shake.It.Off
 
@@ -26,4 +27,6 @@ main = shake $ do
        buildPath = "dist/build/Shake"
 
        shakeExecutable ∷ String
-       shakeExecutable = buildPath </> "shake.exe"
+       shakeExecutable =
+         if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> "shake.exe"
+            | otherwise → buildPath </> "shake"
