@@ -26,10 +26,10 @@ import           Control.Eternal
 import           Control.Monad
 
 import           Shake.It.C          as Shake
-import           Shake.It.Rust       as Shake
 import           Shake.It.Core       as Shake
 import           Shake.It.FileSystem as Shake
 import           Shake.It.Haskell    as Shake
+import           Shake.It.Rust       as Shake
 import           Shake.It.Utils      as Shake
 import           Shake.It.Version    as Shake
 

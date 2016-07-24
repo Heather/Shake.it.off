@@ -1,21 +1,5 @@
-cmd: cabal
+cmd: stack
 args:
- - install
-name: cabal install
-targets:
-  cabal:
-    cmd: stack
-    args:
-      - install
-    name: stack
-  force-reinstall:
-    cmd: cabal
-    args:
-      - install
-      - --force-reinstalls
-    name: force-reinstall
-  test:
-    cmd: shake
-    args:
-      - -f
-    name: test
+ - --version
+ - build
+name: build

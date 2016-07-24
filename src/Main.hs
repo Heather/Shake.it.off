@@ -51,7 +51,7 @@ shakeOptions = [
   ]
 
 getp ∷ ∀ (m :: * → *). Monad m         ⇒ String → Options → m Options
-forceRebuild ∷ ∀ (m :: * → *). Monad m ⇒ Options → m Options
+forceRebuild ∷ ∀ (m ∷ * → *). Monad m ⇒ Options → m Options
 
 getp arg ο      = return ο { optPlatform = arg }
 forceRebuild ο  = return ο { optForce = True }
