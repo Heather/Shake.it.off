@@ -22,11 +22,16 @@ import           Control.Eternal
 import           Control.Exception
 import           Control.Monad
 
-shakeIt ∷ [String] → String → Bool → String → IO ()
-shakeIt args current force platform = do
+shakeIt ∷ [String]
+        → String  -- current directory
+        → Bool    -- force
+        → Bool    -- pretend
+        → String  -- platform
+        → IO ()
+shakeIt args current force pretend platform = do
   let fullNamelhs = current </> "shake.it.lhs"
       fullNamehs  = current </> "shake.it.hs"
-      shakeShake  = shakeItOff args current force platform
+      shakeShake  = shakeItOff args current force pretend platform
   existslhs ← doesFileExist fullNamelhs
   existshs  ← doesFileExist fullNamehs
   if | existslhs → shakeShake fullNamelhs
@@ -36,12 +41,13 @@ shakeIt args current force platform = do
           putStrLn "no shake.it.hs / shake.it.lhs file"
 
 shakeItOff ∷ [String]
-           → String
-           → Bool
-           → String
-           → String
+           → String   -- current directory
+           → Bool     -- force
+           → Bool     -- pretend
+           → String   -- platform
+           → String   -- shake file
            → IO ()
-shakeItOff args dir force platform shakefile = do
+shakeItOff args dir force pretend platform shakefile = do
   let cscr = if | platform ∈ ["Win_x64", "Win"] → "shake.it.off.exe"
                 | otherwise → "shake.it.off"
 
@@ -67,4 +73,5 @@ shakeItOff args dir force platform shakefile = do
       shArgs = filter (\ο → not (startswith "-p" ο
                               || startswith "--platform" ο)) ifForce
 
-  runShake cscr shArgs
+  unless pretend $
+    runShake cscr shArgs

@@ -24,7 +24,7 @@ main = shake $ do
       >>= checkExitCode
 
  where buildPath ∷ String
-       buildPath = "dist/build/Shake"
+       buildPath = "dist/build/shake"
 
        shakeExecutable ∷ String
        shakeExecutable =

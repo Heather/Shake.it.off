@@ -1,5 +1,2 @@
-cmd: stack
-args:
- - --version
- - build
-name: build
+cmd: shake
+name: shake
