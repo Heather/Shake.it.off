@@ -1,5 +1,5 @@
-{-# LANGUAGE UnicodeSyntax #-}
 {-# LANGUAGE MultiWayIf    #-}
+{-# LANGUAGE UnicodeSyntax #-}
 
 import           Shake.It.Off
 
