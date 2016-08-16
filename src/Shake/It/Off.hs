@@ -103,7 +103,8 @@ obj' (arg, deps) complexBuildAction = do
   writeIORef objects new
 
 -- operators
-infixl 7 ∰, ◉, ∫, #>, ##>, @>, @@>, ♯, ♯♯
+infixl 5 ◉
+infixl 2 ∰, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
 -- tuple maker
 (◉) ∷ String → [String] → (String, [String])
