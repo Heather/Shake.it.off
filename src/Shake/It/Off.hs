@@ -104,7 +104,9 @@ obj' (arg, deps) complexBuildAction = do
 
 -- operators
 infixl 5 ◉
-infixl 2 ∰, ∫, #>, ##>, @>, @@>, ♯, ♯♯
+-- even >>= will have 1 priority and $ have priority 0
+-- to check priority: type ":i >>=" into ghci
+infixl 0 ∰, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
 -- tuple maker
 (◉) ∷ String → [String] → (String, [String])
