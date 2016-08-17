@@ -20,8 +20,8 @@ main = shake $ do
     cabal ["install"]
 
   "test" ◉ [shakeExecutable] ∰
-    (rawSystem shakeExecutable ["--version"]
-      >>= checkExitCode)
+    rawSystem shakeExecutable ["--version"]
+      >>= checkExitCode
 
  where buildPath ∷ String
        buildPath = "dist/build/shake"
