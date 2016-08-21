@@ -16,6 +16,7 @@ TODO
  - plugin system
  - option for `.atom-build.yml` file generation
  - resolve issues with very complicated dependies
+ - tests
  - document code
 
 Operators
@@ -23,42 +24,45 @@ Operators
 
 ``` haskell
 -- operators
-infixl 2 ∰, ◉, ∫, #>, ##>, @>, @@>, ♯, ♯♯
+infixl 5 ◉
+-- even >>= will have 1 priority and $ have priority 0
+-- to check priority: type ":i >>=" into ghci
+infixl 0 ∰, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
 -- tuple maker
-(◉) :: String → [String] → (String, [String])
+(◉) ∷ String → [String] → (String, [String])
 s ◉ ss = (s, ss)
 
 -- Phony operator
-(@>) :: String → IO () → IO ()
+(@>) ∷ String → IO () → IO ()
 r @> a = phony r a
 
 -- Phony' operator
-(@@>) :: (String, [String]) → IO () → IO ()
+(@@>) ∷ (String, [String]) → IO () → IO ()
 r @@> a = phony' r a
 
 -- Unicode variant of phony
-(∫) :: String → IO () → IO ()
+(∫) ∷ String → IO () → IO ()
 r ∫ a = phony r a
 
 -- Unicode variant of phony'
-(∰) :: (String, [String]) → IO () → IO ()
+(∰) ∷ (String, [String]) → IO () → IO ()
 r ∰ a = phony' r a
 
 -- Obj operator
-(#>) :: String → IO () → IO ()
+(#>) ∷ String → IO () → IO ()
 r #> a = obj r a
 
 -- Obj' operator
-(##>) :: (String, [String]) → IO () → IO ()
+(##>) ∷ (String, [String]) → IO () → IO ()
 r ##> a = obj' r a
 
 -- Unicode Obj operator
-(♯) :: String → IO () → IO ()
+(♯) ∷ FilePath → IO () → IO ()
 r ♯ a = obj r a
 
 -- Unicode Obj' operator
-(♯♯) :: (String, [String]) → IO () → IO ()
+(♯♯) ∷ (FilePath, [String]) → IO () → IO ()
 r ♯♯ a = obj' r a
 ```
 
@@ -85,27 +89,36 @@ every time you run `shake` on this file if `shake.it.off` is outdated or not exi
 more complex example with Unicode operators:
 
 ``` haskell
+{-# LANGUAGE MultiWayIf    #-}
 {-# LANGUAGE UnicodeSyntax #-}
 
-import Shake.It.Off
+import           Shake.It.Off
 
-main :: IO ()
+main ∷ IO ()
 main = shake $ do
   -- phony clean @> is non-unicode operator alternative
   "clean" ∫ cabal ["clean"]
 
   -- building object rule #> is non-unicode operator alternative
-  buildPath </> "shake.exe" ♯ do
+  shakeExecutable ♯ do
     cabal ["install", "--only-dependencies"]
     cabal ["configure"]
     cabal ["build"]
 
   -- install phony depending on obj, @@> is non-unicode operator alternative
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
-  "install" ◉ [buildPath </> "shake.exe"] ∰
+  "install" ◉ [shakeExecutable] ∰
     cabal ["install"]
 
- where buildPath :: String
-       buildPath = "dist/build/Shake"
-```
+  "test" ◉ [shakeExecutable] ∰
+    rawSystem shakeExecutable ["--version"]
+      >>= checkExitCode
 
+ where buildPath ∷ String
+       buildPath = "dist/build/shake"
+
+       shakeExecutable ∷ String
+       shakeExecutable =
+         if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> "shake.exe"
+            | otherwise → buildPath </> "shake"
+```
