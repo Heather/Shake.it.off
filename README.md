@@ -18,6 +18,7 @@ TODO
  - resolve issues with very complicated dependies
  - tests
  - document code
+ - help output should provide script help either
 
 Operators
 ---------

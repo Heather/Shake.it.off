@@ -25,8 +25,10 @@ import           Data.IORef
 import           Control.Eternal
 import           Control.Monad
 
-import           Shake.It.C          as Shake
+import           Shake.It.Optional
 import           Shake.It.Core       as Shake
+
+import           Shake.It.C          as Shake
 import           Shake.It.FileSystem as Shake
 import           Shake.It.Haskell    as Shake
 import           Shake.It.Rust       as Shake
@@ -49,8 +51,11 @@ displayHelp = do
   forM_ (reverse myPhonyActions) $ \(r, _, d) →
     putStrLn $ "  " ++ r ++ " : " ++ d
 
-phony ∷ String → IO () → IO ()
-phony arg phonyAction = do
+phony :: (Optional1 [String] (String → IO () → IO ()) r) ⇒ r
+phony = opt1 gPhony []
+
+gPhony ∷ [String] → String → IO () → IO ()
+gPhony [] arg phonyAction = do
   args ← readIORef phonyArgs
   if arg ∈ args
     then do phonyAction
@@ -59,9 +64,7 @@ phony arg phonyAction = do
     else do currentPhony ← readIORef phonyActions
             let new = (arg, phonyAction, "TODO") : currentPhony
             writeIORef phonyActions new
-
-phony' ∷ (String, [String]) → IO () → IO ()
-phony' (arg, deps) complexPhonyAction = do
+gPhony deps arg complexPhonyAction = do
   myPhonyArgs ← readIORef phonyArgs
   myPhonyActions ← readIORef phonyActions
   if arg ∈ myPhonyArgs
@@ -79,16 +82,17 @@ phony' (arg, deps) complexPhonyAction = do
     else let new = (arg, complexPhonyAction, "TODO") : myPhonyActions
          in writeIORef phonyActions new
 
-obj ∷ FilePath → IO () → IO ()
-obj arg buildAction = do
+obj :: (Optional1 [String] (FilePath → IO () → IO ()) r) ⇒ r
+obj = opt1 gObj []
+
+gObj ∷ [String] → FilePath → IO () → IO ()
+gObj [] arg buildAction = do
   currentObjects ← readIORef objects
   currentObjectList ← readIORef objectsList
   let new = (arg, buildAction) : currentObjects
   writeIORef objectsList (arg : currentObjectList)
   writeIORef objects new
-
-obj' ∷ (FilePath, [String]) → IO () → IO ()
-obj' (arg, deps) complexBuildAction = do
+gObj deps arg complexBuildAction = do
   myPhonyActions ← readIORef phonyActions
   myObjects      ← readIORef objects
   myObjectList   ← readIORef objectsList
@@ -118,7 +122,7 @@ r @> a = phony r a
 
 -- Phony' operator
 (@@>) ∷ (String, [String]) → IO () → IO ()
-r @@> a = phony' r a
+(r, d) @@> a = phony d r a
 
 -- Unicode variant of phony
 (∫) ∷ String → IO () → IO ()
@@ -126,7 +130,7 @@ r ∫ a = phony r a
 
 -- Unicode variant of phony'
 (∰) ∷ (String, [String]) → IO () → IO ()
-r ∰ a = phony' r a
+(r, d) ∰ a = phony d r a
 
 -- Obj operator
 (#>) ∷ String → IO () → IO ()
@@ -134,7 +138,7 @@ r #> a = obj r a
 
 -- Obj' operator
 (##>) ∷ (String, [String]) → IO () → IO ()
-r ##> a = obj' r a
+(r, d) ##> a = obj d r a
 
 -- Unicode Obj operator
 (♯) ∷ FilePath → IO () → IO ()
@@ -142,4 +146,4 @@ r ♯ a = obj r a
 
 -- Unicode Obj' operator
 (♯♯) ∷ (FilePath, [String]) → IO () → IO ()
-r ♯♯ a = obj' r a
+(r, d) ♯♯ a = obj d r a

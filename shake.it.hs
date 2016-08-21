@@ -23,6 +23,10 @@ main = shake $ do
     rawSystem shakeExecutable ["--version"]
       >>= checkExitCode
 
+  "rebuild" ◉ ["clean"] ∰ do
+    cabal ["configure"]
+    cabal ["build"]
+
  where buildPath ∷ String
        buildPath = "dist/build/shake"
 
