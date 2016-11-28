@@ -15,7 +15,7 @@ TODO
 
  - plugin system
  - option for `.atom-build.yml` file generation
- - resolve issues with very complicated dependies
+ - resolve issues with very complicated dependencies
  - tests
  - document code
  - help output should provide script help either
