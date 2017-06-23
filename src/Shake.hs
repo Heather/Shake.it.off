@@ -66,12 +66,12 @@ shakeItOff args dir force pretend platform shakefile = do
                                exitFailure
                              ExitSuccess → return ()
 
+  -- TODO: filter out all the options
   let ifForce =
         if | force → filter (\ο → ο /= "-f"
                                && ο /= "--force") args
            | otherwise → args
-      shArgs = filter (\ο → not (startswith "-p" ο
-                              || startswith "--platform" ο)) ifForce
+      shArgs = filter (not . startswith "--platform") ifForce
 
   unless pretend $
     runShake cscr shArgs
