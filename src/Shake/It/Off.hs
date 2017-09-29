@@ -49,7 +49,7 @@ displayHelp ∷ IO ()
 displayHelp = do
   myPhonyActions ← readIORef phonyActions
   forM_ (reverse myPhonyActions) $ \(r, _, d) →
-    putStrLn $ "  " ++ r ++ " : " ++ d
+    putStrLn $ "  " ++ r ++ " :" ++ d
 
 phony :: (Optional1 [String] (String → IO () → IO ()) r) ⇒ r
 phony = opt1 gPhony []
