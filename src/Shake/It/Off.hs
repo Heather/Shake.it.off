@@ -58,10 +58,8 @@ gPhony ∷ [String] → String → IO () → IO ()
 gPhony [] arg phonyAction = do
   args ← readIORef phonyArgs
   let desc = descByname args arg
-  putStrLn $ "imput arg: " ++ arg
   if (arg, desc) ∈ args
     then do phonyAction
-            putStrLn $ "going for: " ++ arg
             filtered ← removePhonyArg args arg
             when (null filtered) exitSuccess
     else do currentPhony ← readIORef phonyActions

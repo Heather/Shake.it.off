@@ -46,7 +46,7 @@ nameAndDesc ∷ [String] → [(String, String)]
 nameAndDesc [] = []
 nameAndDesc [χ] =
   let splt = splitOn "|" χ
-  in if length splt > 1
+  in if length splt > 2
       then [(trim (head splt), last splt)]
       else [(trim χ, "No description")]
 nameAndDesc (χ:xs) = nameAndDesc [χ] ++ nameAndDesc xs
