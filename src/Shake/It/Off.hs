@@ -57,17 +57,19 @@ phony = opt1 gPhony []
 gPhony ∷ [String] → String → IO () → IO ()
 gPhony [] arg phonyAction = do
   args ← readIORef phonyArgs
-  if arg ∈ args
+  let (an, de) = nameAndDesc arg
+  if an ∈ args
     then do phonyAction
-            filtered ← removePhonyArg args arg
+            filtered ← removePhonyArg args an
             when (null filtered) exitSuccess
     else do currentPhony ← readIORef phonyActions
-            let new = (arg, phonyAction, "TODO") : currentPhony
+            let new = (an, phonyAction, de) : currentPhony
             writeIORef phonyActions new
 gPhony deps arg complexPhonyAction = do
   myPhonyArgs ← readIORef phonyArgs
   myPhonyActions ← readIORef phonyActions
-  if arg ∈ myPhonyArgs
+  let (an, de) = nameAndDesc arg
+  if an ∈ myPhonyArgs
     then do
       myObjects ← readIORef objects
       forM_ deps $ \dep → do
@@ -77,9 +79,9 @@ gPhony deps arg complexPhonyAction = do
         forM_ myPhonyActions $ \(rule, phonyAction, _) →
           when (dep == rule) $ compilePhony rule phonyAction
       complexPhonyAction
-      filtered ← removePhonyArg myPhonyArgs arg
+      filtered ← removePhonyArg myPhonyArgs an
       when (null filtered) exitSuccess
-    else let new = (arg, complexPhonyAction, "TODO") : myPhonyActions
+    else let new = (an, complexPhonyAction, de) : myPhonyActions
          in writeIORef phonyActions new
 
 obj :: (Optional1 [String] (FilePath → IO () → IO ()) r) ⇒ r
