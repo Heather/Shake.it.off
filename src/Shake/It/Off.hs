@@ -38,7 +38,7 @@ import           Shake.It.Version    as Shake
 shake ∷ IO () → IO ()
 shake maybeAction = do
   args ← getArgs
-  writeIORef phonyArgs (nameAndDesc args)
+  writeIORef phonyArgs args
   maybeAction
   if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
      | otherwise → do
@@ -57,19 +57,17 @@ phony = opt1 gPhony []
 gPhony ∷ [String] → String → IO () → IO ()
 gPhony [] arg phonyAction = do
   args ← readIORef phonyArgs
-  let desc = descByname args arg
-  if (arg, desc) ∈ args
+  if arg ∈ args
     then do phonyAction
             filtered ← removePhonyArg args arg
             when (null filtered) exitSuccess
     else do currentPhony ← readIORef phonyActions
-            let new = (arg, phonyAction, desc) : currentPhony
+            let new = (arg, phonyAction, "TODO") : currentPhony
             writeIORef phonyActions new
 gPhony deps arg complexPhonyAction = do
   myPhonyArgs ← readIORef phonyArgs
   myPhonyActions ← readIORef phonyActions
-  let desc = descByname myPhonyArgs arg
-  if (arg, desc) ∈ myPhonyArgs
+  if arg ∈ myPhonyArgs
     then do
       myObjects ← readIORef objects
       forM_ deps $ \dep → do
@@ -81,7 +79,7 @@ gPhony deps arg complexPhonyAction = do
       complexPhonyAction
       filtered ← removePhonyArg myPhonyArgs arg
       when (null filtered) exitSuccess
-    else let new = (arg, complexPhonyAction, desc) : myPhonyActions
+    else let new = (arg, complexPhonyAction, "TODO") : myPhonyActions
          in writeIORef phonyActions new
 
 obj :: (Optional1 [String] (FilePath → IO () → IO ()) r) ⇒ r

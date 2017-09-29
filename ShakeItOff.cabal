@@ -1,5 +1,5 @@
 name:           ShakeItOff
-version:        0.2.1
+version:        0.2.0
 license:        BSD3
 category:       Development
 
@@ -33,7 +33,6 @@ library
   Build-Depends:
       base
     , process
-    , split
     , directory
     , filepath
     , time
@@ -49,7 +48,6 @@ Executable    shake
   Build-Depends:
       base
     , process
-    , split
     , directory
     , filepath
     , time

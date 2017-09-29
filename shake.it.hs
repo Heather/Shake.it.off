@@ -6,7 +6,7 @@ import           Shake.It.Off
 main ∷ IO ()
 main = shake $ do
   -- phony clean @> is non-unicode operator alternative
-  "clean | clean build dir" ∫ cabal ["clean"]
+  "clean" ∫ cabal ["clean"]
 
   -- building object rule #> is non-unicode operator alternative
   shakeExecutable ♯ do
@@ -16,14 +16,14 @@ main = shake $ do
 
   -- install phony depending on obj, @@> is non-unicode operator alternative
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
-  "install | install to system" ◉ [shakeExecutable] ∰
+  "install" ◉ [shakeExecutable] ∰
     cabal ["install"]
 
-  "test | run tests" ◉ [shakeExecutable] ∰
+  "test" ◉ [shakeExecutable] ∰
     rawSystem shakeExecutable ["--version"]
       >>= checkExitCode
 
-  "rebuild | run clean, configure and cabal build" ◉ ["clean"] ∰ do
+  "rebuild" ◉ ["clean"] ∰ do
     cabal ["configure"]
     cabal ["build"]
 

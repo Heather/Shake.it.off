@@ -11,7 +11,7 @@ import           System.IO.Unsafe
 
 import           Data.IORef
 
-phonyArgs ∷ IORef [(String, String)]
+phonyArgs ∷ IORef [String]
 {-# NOINLINE phonyArgs #-}
 phonyArgs = unsafePerformIO (newIORef [])
 
