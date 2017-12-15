@@ -7,18 +7,18 @@ module Shake.It.Core
   , removePhonyArg
   , compilePhony
   , compileObj
-  , module MustHave
+  , module SystemImports
   , module Shake.It.Global
   ) where
 
-import           System.Directory   as MustHave
-import           System.Environment as MustHave
-import           System.Exit        as MustHave
-import           System.FilePath    as MustHave
-import           System.Info        as MustHave
-import           System.Process     as MustHave
+import           System.Directory   as SystemImports
+import           System.Environment as SystemImports
+import           System.Exit        as SystemImports
+import           System.FilePath    as SystemImports
+import           System.Info        as SystemImports
+import           System.Process     as SystemImports
 
-import           Data.Char (isSpace)
+import           Data.Char          (isSpace)
 import           Data.IORef
 import           Data.List.Split
 

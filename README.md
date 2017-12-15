@@ -7,6 +7,7 @@ Features
  - Simple as pie!
  - You write Haskell, plain haskell, IO (), no Rules, no Actions, no custom stuff to learn, just plain IO ()
  - Compile shake.it.off script only when shake.it really changes!
+ - `shake --help` will display `shake.it.hs` options
  - Contains many (and adding) handy functions for creating build scripts everywhere!
  - You can think of pony when you use phony... (it's in early stage)
 
@@ -18,7 +19,6 @@ TODO
  - resolve issues with very complicated dependencies
  - tests
  - document code
- - help output should provide script help either
 
 Operators
 ---------
@@ -40,7 +40,7 @@ r @> a = phony r a
 
 -- Phony' operator
 (@@>) ∷ (String, [String]) → IO () → IO ()
-r @@> a = phony' r a
+(r, d) @@> a = phony d r a
 
 -- Unicode variant of phony
 (∫) ∷ String → IO () → IO ()
@@ -48,7 +48,7 @@ r ∫ a = phony r a
 
 -- Unicode variant of phony'
 (∰) ∷ (String, [String]) → IO () → IO ()
-r ∰ a = phony' r a
+(r, d) ∰ a = phony d r a
 
 -- Obj operator
 (#>) ∷ String → IO () → IO ()
@@ -56,7 +56,7 @@ r #> a = obj r a
 
 -- Obj' operator
 (##>) ∷ (String, [String]) → IO () → IO ()
-r ##> a = obj' r a
+(r, d) ##> a = obj d r a
 
 -- Unicode Obj operator
 (♯) ∷ FilePath → IO () → IO ()
@@ -64,7 +64,7 @@ r ♯ a = obj r a
 
 -- Unicode Obj' operator
 (♯♯) ∷ (FilePath, [String]) → IO () → IO ()
-r ♯♯ a = obj' r a
+(r, d) ♯♯ a = obj d r a
 ```
 
 Example
@@ -98,7 +98,7 @@ import           Shake.It.Off
 main ∷ IO ()
 main = shake $ do
   -- phony clean @> is non-unicode operator alternative
-  "clean" ∫ cabal ["clean"]
+  "clean | clean the project" ∫ cabal ["clean"]
 
   -- building object rule #> is non-unicode operator alternative
   shakeExecutable ♯ do
@@ -108,12 +108,16 @@ main = shake $ do
 
   -- install phony depending on obj, @@> is non-unicode operator alternative
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
-  "install" ◉ [shakeExecutable] ∰
+  "install | install to system" ◉ [shakeExecutable] ∰
     cabal ["install"]
 
-  "test" ◉ [shakeExecutable] ∰
+  "test | build and test" ◉ [shakeExecutable] ∰
     rawSystem shakeExecutable ["--version"]
       >>= checkExitCode
+
+  "rebuild | clean and rebuild" ◉ ["clean"] ∰ do
+    cabal ["configure"]
+    cabal ["build"]
 
  where buildPath ∷ String
        buildPath = "dist/build/shake"
@@ -122,4 +126,5 @@ main = shake $ do
        shakeExecutable =
          if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> "shake.exe"
             | otherwise → buildPath </> "shake"
+
 ```
