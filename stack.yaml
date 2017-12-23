@@ -1,10 +1,26 @@
 flags: {}
 arch: i386, x86_64
-os: windows, linux
 system-ghc: true
 allow-newer: true
 packages:
  - '.'
 extra-deps:
 - eternal-0.1.7
+- MissingH-1.4.0.1
+- base-unicode-symbols-0.2.2.4
+- split-0.2.3.2
+- utf8-string-1.0.1.1
+- HUnit-1.6.0.0
+- hslogger-1.2.10
+- mtl-2.2.1
+- network-2.6.3.2
+- old-locale-1.0.0.7
+- old-time-1.1.0.3
+- parsec-3.1.11
+- random-1.1
+- regex-compat-0.95.1
+- call-stack-0.1.0
+- regex-base-0.93.2
+- regex-posix-0.95.2
+- text-1.2.2.2
 resolver: ghc-8.0.1
