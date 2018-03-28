@@ -23,4 +23,4 @@ extra-deps:
 - regex-base-0.93.2
 - regex-posix-0.95.2
 - text-1.2.2.2
-resolver: ghc-8.0.1
+resolver: ghc-8.0.2
