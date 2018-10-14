@@ -22,5 +22,5 @@ extra-deps:
 - call-stack-0.1.0
 - regex-base-0.93.2
 - regex-posix-0.95.2
-- text-1.2.2.2
-resolver: ghc-8.0.2
+- text-1.2.3.1
+resolver: lts-12.13
